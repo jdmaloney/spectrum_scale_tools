@@ -1,0 +1,70 @@
+#!/bin/bash
+
+## Path to quota dump file --> output of: mmrepqouta $device -Y
+qfile=""
+
+## Skip this for user root
+if [[ $EUID -eq 0 ]]; then
+   exit 1
+fi
+
+## Header section
+echo "Directories quota usage for user ${USER}:"
+printf '%s\n'
+printf '%107s\n' | tr ' ' -
+printf '|      Fileset       |  User   |  User   |  User   |  Project |  Project |   User   |   User   |   User   |\n';
+printf '|                    |  Block  |  Soft   |  Hard   |  Block   |  Block   |   File   |   Soft   |   Hard   |\n';
+printf '|                    |  Used   |  Quota  |  Limit  |  Used    |  Limit   |   Used   |   Quota  |   Limit  |\n';
+printf '%107s\n' | tr ' ' -
+
+## Extract data relevent to user
+awk -v euid="$EUID" -F ':' '$9 == euid {print $0}' ${qfile} > /dev/shm/quota_$USER.tmp
+
+## Parse out quota information
+cat /dev/shm/quota_$USER.tmp | while read line; do
+	## Populate variables
+	read FILESET BLOCK BQUOTA BLIMIT FILE FQUOTA FLIMIT <<< "$(echo ${line} | awk -F ':' '{print $25" "$11" "$12" "$13" "$16" "$17" "$18}')"
+	read PUSED PQUOTA <<< "$(awk -v fileset="$FILESET" -F ":" '$8 == "FILESET" && $10 == fileset {print $11" "$12}' ${qfile})"
+	## Covert units
+	unit_convert () {
+		if [ ${1} -lt 1024 ]; then
+			echo "${1}KB"
+		elif [ ${1} -gt 1024 ] && [ ${1} -lt 1048576 ]; then
+			new_val=$(echo "scale=1; ${1}/1024" | bc)
+			echo "${new_val}MB"
+		elif [ ${1} -ge 1048576 ] && [ ${1} -lt 1073741824 ]; then
+			new_val=$(echo "scale=1; ${1}/1024/1024" | bc)
+                        echo "${new_val}GB"
+		elif [ ${1} -ge 1073741824 ] && [ ${1} -lt 1099511627776 ]; then
+                        new_val=$(echo "scale=1; ${1}/1024/1024/1024" | bc)
+                        echo "${new_val}TB"
+		elif [ ${1} -ge 1099511627776 ]; then
+                        new_val=$(echo "scale=1; ${1}/1024/1024/1024/1024" | bc)
+                        echo "${new_val}PB"
+		fi
+	}
+	BLOCK_FINAL="$(unit_convert ${BLOCK})"
+	if [ ${BQUOTA} -ne 0 ]; then
+		BQUOTA_FINAL="$(unit_convert ${BQUOTA})"
+	else
+		BQUOTA_FINAL="N/A"
+	fi
+	if [ ${BLIMIT} -ne 0 ]; then
+		BLIMIT_FINAL="$(unit_convert ${BLIMIT})"
+	else
+		BLIMIT_FINAL="N/A"
+	fi
+	PUSED_FINAL="$(unit_convert ${PUSED})"
+	if [ ${PQUOTA} -ne 0 ]; then
+		PQUOTA_FINAL="$(unit_convert ${PQUOTA})"
+	else
+		PQUOTA_FINAL="N/A"
+	fi
+	## Printing out quota data
+	printf "| %-18s | %-7s | %-7s | %-7s | %-8s | %-8s | %-8s | %-8s | %-8s |" "$FILESET" "$BLOCK_FINAL" "$BQUOTA_FINAL" "$BLIMIT_FINAL" "$PUSED_FINAL" "$PQUOTA_FINAL" "$FILE" "$FQUOTA" "$FLIMIT"; printf '%s\n'
+done
+
+printf '%107s\n' | tr ' ' -
+
+## Clean up
+rm /dev/shm/quota_$USER.tmp > /dev/null
