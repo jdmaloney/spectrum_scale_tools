@@ -1,5 +1,5 @@
 # Spectrum Scale Tools
-Tools for managing, administering, wrangling IBM Spectrum Scale file systems
+Tools for managing, administering, and/or wrangling IBM Spectrum Scale file systems
 
 ## Quota CMD
 Script that users can run to view quota information about the file systems they are in.  Relies on the output of:
