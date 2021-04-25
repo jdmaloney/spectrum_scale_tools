@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Path to quota dump file --> output of: mmrepqouta $device -Y
+## Path to quota dump file --> output of: mmrepqouta -Y $DEVICE
 qfile=""
 
 ## Skip this for user root
