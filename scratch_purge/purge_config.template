@@ -1,0 +1,21 @@
+## This is but a template; copy this file to file named purge_config for running
+
+readonly PROGNAME=$(basename "$0")
+readonly LOCKDIR=/tmp
+readonly LOCKFD=200
+readonly PURGEFS=	# Fill in with spectrum scale device name
+readonly PURGEDEV=	# Fill in with path to area that needs purging
+readonly PURGEWORKDIR=$PURGEFS/policy/purge/tmp
+readonly PURGENODECLASS=	# Fill in nodeclass of nodes that will participate in purge
+readonly PURGEFILESET=		# Fill in with name of fileset containing the path being purged
+readonly PURGEPOLICY=scratch.purge.policy
+readonly PURGENAME=purge
+readonly PURGELOG=$PURGEWORKDIR/ss_purge.log
+readonly MMAPPLYPOLICY=/usr/lpp/mmfs/bin/mmapplypolicy
+readonly DAYS_RETENTION=	# Fill in with number of days to keep files
+readonly INFLUXSERVER1=""	# Fill in with FQDN of InfluxDB host
+readonly INFLUXDATABASE=""	# Name of InfluxDB database receiving metrics
+readonly INFLUXUSER=""		# Username for InfluxDB database
+readonly INFLUXPASS=""		# Password for InfluxDB database
+readonly HTTPS_PROXY=""		# If a proxy is needed to reach InfluxDB fill in here
+readonly HTTP_PROXY=""		# If a proxy is needed to reach InfluxDB fill in here
