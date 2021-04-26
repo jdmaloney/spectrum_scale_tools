@@ -29,7 +29,7 @@ While this is written as a scratch purge policy; this can be used to purge data 
 
 ### File Analysis
 - You feed this script the output of the List Files script, for example:
->>file_analysis.pl /tmp/policy.32594/list.all-files -s
+>file_analysis.pl /tmp/policy.32594/list.all-files -s
 
 You can specify what type of analysis:
      Flag    Analysis Type
