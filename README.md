@@ -33,7 +33,7 @@ While this is written as a scratch purge policy; this can be used to purge data 
 
 You can specify what type of analysis:
 
-Flag	Analysis Type
+Analysis Types and their flags
 - -s	Breakdown by File Size
 - -c	Breakdown by File Creation Days
 - -m	Breakdown by File Modification Days
