@@ -32,13 +32,14 @@ While this is written as a scratch purge policy; this can be used to purge data 
 >file_analysis.pl /tmp/policy.32594/list.all-files -s
 
 You can specify what type of analysis:
-     Flag    Analysis Type
-     -s      Breakdown by File Size
-     -c      Breakdown by File Creation Days
-     -m      Breakdown by File Modification Days
-     -a      Breakdown by File Access Days
-     -u      Breakdown by UID
-     -g      Breakdown by GID
+
+Flag	Analysis Type
+-s	Breakdown by File Size
+-c	Breakdown by File Creation Days
+-m	Breakdown by File Modification Days
+-a	Breakdown by File Access Days
+-u	Breakdown by UID
+-g	Breakdown by GID
 
 ### Bucket to Flash Calc
 As flash becomes very prevelent in deployments not just for metadata but also data, it's handy to find out how much usable flash needs to be procurred for a systemeither existing or future.  This script runs those calculations.  For example say you have an FS where metadata is either in-line on the NSDs or running on dedicatd disk or flash NSDs and you're looking to upgrade to a new FS that has a new larger size and a flash pool for small files.
