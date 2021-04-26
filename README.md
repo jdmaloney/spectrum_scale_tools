@@ -17,7 +17,7 @@ Copy the purge_config.template file to purge_config; and fill in the purge_confi
 
 While this is written as a scratch purge policy; this can be used to purge data older than XX days down any path in a file system.  Containing that area in an independent inode fileset helps speed things up nicely as it limits the scope of the policy scan to just that fileset which can speed things up, especially on file systems with other filesets that have a lot of data in them.  
 
-## File Analysis
+## File System Analysis Tools
 
 ### List Files
 - Run list_files.sh <PATH>
@@ -27,11 +27,9 @@ While this is written as a scratch purge policy; this can be used to purge data 
 - Run list_directories.sh <PATH>
 - This creates a /tmp/policy.<PID>/list.all-directories file
 
-### File Analysis
+### File System Reports
 - You feed this script the output of the List Files script, for example:
 >file_analysis.pl /tmp/policy.32594/list.all-files -s
-
-You can specify what type of analysis:
 
 Analysis Types and their flags
 - -s	Breakdown by File Size
