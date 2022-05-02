@@ -2,6 +2,7 @@
 
 ## Path to quota dump file --> output of: mmrepqouta -Y $DEVICE
 qfile=""
+ffile=""
 
 ## Skip this for user root
 if [[ $EUID -eq 0 ]]; then
@@ -12,7 +13,7 @@ fi
 echo "Directories quota usage for user ${USER}:"
 printf '%s\n'
 printf '%107s\n' | tr ' ' -
-printf '|      Fileset       |  User   |  User   |  User   |  Project |  Project |   User   |   User   |   User   |\n';
+printf '|   Directory Path   |  User   |  User   |  User   |  Project |  Project |   User   |   User   |   User   |\n';
 printf '|                    |  Block  |  Soft   |  Hard   |  Block   |  Block   |   File   |   Soft   |   Hard   |\n';
 printf '|                    |  Used   |  Quota  |  Limit  |  Used    |  Limit   |   Used   |   Quota  |   Limit  |\n';
 printf '%107s\n' | tr ' ' -
@@ -25,6 +26,8 @@ cat /dev/shm/quota_$USER.tmp | while read line; do
 	## Populate variables
 	read FILESET BLOCK BQUOTA BLIMIT FILE FQUOTA FLIMIT <<< "$(echo ${line} | awk -F ':' '{print $25" "$11" "$12" "$13" "$16" "$17" "$18}')"
 	read PUSED PQUOTA <<< "$(awk -v fileset="$FILESET" -F ":" '$8 == "FILESET" && $10 == fileset {print $11" "$12}' ${qfile})"
+	## Fileset to Path
+	FPATH=$(awk -F ":" -v fileset=$FILESET '$8 == fileset {print $0}' ${ffile} | cut -d':' -f 12 | sed 's/%2F/\//g' | cut -d'/' -f 4- | sed 's/^/\//')
 	## Covert units
 	unit_convert () {
 		if [ ${1} -lt 1024 ]; then
@@ -61,7 +64,7 @@ cat /dev/shm/quota_$USER.tmp | while read line; do
 		PQUOTA_FINAL="N/A"
 	fi
 	## Printing out quota data
-	printf "| %-18s | %-7s | %-7s | %-7s | %-8s | %-8s | %-8s | %-8s | %-8s |" "$FILESET" "$BLOCK_FINAL" "$BQUOTA_FINAL" "$BLIMIT_FINAL" "$PUSED_FINAL" "$PQUOTA_FINAL" "$FILE" "$FQUOTA" "$FLIMIT"; printf '%s\n'
+	printf "| %-18s | %-7s | %-7s | %-7s | %-8s | %-8s | %-8s | %-8s | %-8s |" "$FPATH" "$BLOCK_FINAL" "$BQUOTA_FINAL" "$BLIMIT_FINAL" "$PUSED_FINAL" "$PQUOTA_FINAL" "$FILE" "$FQUOTA" "$FLIMIT"; printf '%s\n'
 done
 
 printf '%107s\n' | tr ' ' -
