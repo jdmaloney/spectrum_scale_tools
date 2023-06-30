@@ -2,6 +2,8 @@
 
 ## Path to quota dump file --> output of: mmrepqouta -Y $DEVICE
 qfile=""
+
+## Path to fileset dump file --> output of: mmlsfileset $DEVICE -L -Y
 ffile=""
 
 ## Skip this for user root

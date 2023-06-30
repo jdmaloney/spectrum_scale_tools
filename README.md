@@ -7,6 +7,7 @@ These tools have been jointly developed by members of the Storage team (SET) at 
 Script that users can run to view quota information about the file systems they are in.  Relies on the output of:
 
 >mmrepquota -Y $DEVICE
+>mmlsfileset $DEVICE -L -Y
 
 Path to the output of this file needs to be specified in the script; otherwise no changes should be needed.
 
