@@ -6,10 +6,13 @@ These tools have been jointly developed by members of the Storage team (SET) at 
 ## Quota CMD
 Script that users can run to view quota information about the file systems they are in.  Relies on the output of:
 
+### Best to run from host that doesn't tie in to LDAP/AD (so it prints uids and gids instead of pretty names); this scales much better
 >mmrepquota -Y $DEVICE
+
+### Can be run from anywhere; we run it along side the above command
 >mmlsfileset $DEVICE -L -Y
 
-Path to the output of this file needs to be specified in the script; otherwise no changes should be needed.
+Path to the output of this file needs to be specified in the script; otherwise no changes should be needed.  Run the above commands on the frequency with which you want quota data to update for users. 
 
 ## Scratch Purge
 Script that can be used to fire off a Spectrum Scale Policy Engine run that runs a purge for files older than a configurable number of days.  The script keeps a list of all files that were purged on each invocation and ships telemetry about how the purge went to an InfluxDB server.  
